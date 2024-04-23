@@ -1,6 +1,63 @@
 # Cody
 
-The purpose of this project is to tackle the finetuning of a Large Language Model (LLM) on the task of code generation. 
+The purpose of this project is to tackle the finetuning of a Large Language Model (LLM) on the task of code generation.
+
+# Index
+
+1. [Project Overview](#project-overview)
+2. [Installation](#installation)
+3. [Models](#models)
+4. [Datasets](#datasets)
+5. [Evaluation: HumanEval](#evaluation-humaneval)
+
+# Project Overview
+
+The repository is structured as follows:
+
+```
+├── src <- Source code
+│   ├── train.py <- Training the model
+│   └── utils    <- Utility functions
+│       ├── args.py        <- Arguments parser
+│       ├── completions.py <- Completions generation
+│       ├── data.py        <- Data pre/post-processing
+│       ├── datasets.py    <- Dataset loading
+│       └── evaluation.py  <- Evaluation functions
+|
+└── notebooks <- Jupyter notebooks
+    ├── data_preparation.ipynb  <- Data preparation
+    └── training.ipynb          <- Training the model
+```
+
+# Installation
+
+TBD
+
+# Models
+
+We will use the `transformers` library to finetune a model on the task of code generation. As initial step I benchmark the initial performance, without any finetuning, of several models on the HumanEval dataset:
+
+| Model Name             | Number Parameters | Generations | HumanEval |
+|------------------------|-------------------|-------------|-----------|
+| microsoft/phi-1        | 1.3B              | 1           | 0.48      |
+| microsoft/phi-2        | 2.7B              | 1           | 0.43      |
+| Qwen/Qwen1.5-0.5B-Chat | 0.5B              | 1           | 0.05      |
+
+You can also find a leaderboard of the performance of different models on the HumanEval dataset [here](https://huggingface.co/spaces/bigcode/bigcode-models-leaderboard), and [here](https://qwenlm.github.io/blog/qwen1.5/) for `Qwen1.5` model. My results may differ from the ones reported in the leaderboard due to the different prompt engineering, checkout how Qwen is generating completions for the [normal](https://github.com/QwenLM/Qwen/blob/main/eval/evaluate_humaneval.py) and [chat](https://github.com/QwenLM/Qwen/blob/main/eval/evaluate_chat_humaneval.py) models.
+
+Note: You can notice that the reported performance 
+
+# Datasets
+
+## Code Alpaca 20k
+
+Preprocessing steps:
+0. Initial dataset size is 20k samples.
+1. Remove samples that no compile. Dataset size is 19,999 samples.
+2. Remove samples that are not function definitions. Dataset size is 19,999 samples.
+3. Remove samples that are not indentated with 4 spaces. Dataset size is 19,999 samples.
+
+For implementation details, check the `get_code_alpaca_20k` function in the [datasets](src/utils/datasets.py) file.
 
 # Evaluation: HumanEval
 
@@ -65,28 +122,3 @@ def check(candidate):
 ```
 
 
-# Models
-
-We will use the `transformers` library to finetune a model on the task of code generation. As initial step I benchmark the initial performance, without any finetuning, of several models on the HumanEval dataset:
-
-| Model Name             | Number Parameters | Generations | HumanEval |
-|------------------------|-------------------|-------------|-----------|
-| microsoft/phi-1        | 1.3B              | 1           | 0.48      |
-| microsoft/phi-2        | 2.7B              | 1           | 0.43      |
-| Qwen/Qwen1.5-0.5B-Chat | 0.5B              | 1           | 0.05      |
-
-You can also find a leaderboard of the performance of different models on the HumanEval dataset [here](https://huggingface.co/spaces/bigcode/bigcode-models-leaderboard), and [here](https://qwenlm.github.io/blog/qwen1.5/) for `Qwen1.5` model. My results may differ from the ones reported in the leaderboard due to the different prompt engineering, checkout how Qwen is generating completions for the [normal](https://github.com/QwenLM/Qwen/blob/main/eval/evaluate_humaneval.py) and [chat](https://github.com/QwenLM/Qwen/blob/main/eval/evaluate_chat_humaneval.py) models.
-
-Note: You can notice that the reported performance 
-
-# Datasets
-
-# Code Alpaca 20k
-
-Preprocessing steps:
-0. Initial dataset size is 20k samples.
-1. Remove samples that no compile. Dataset size is 19,999 samples.
-2. Remove samples that are not function definitions. Dataset size is 19,999 samples.
-3. Remove samples that are not indentated with 4 spaces. Dataset size is 19,999 samples.
-
-For implementation details, check the `get_code_alpaca_20k` function in the [datasets](src/utils/datasets.py) file.
