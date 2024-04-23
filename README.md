@@ -1,5 +1,7 @@
 # Cody
 
+![Welcome Illustration](assets/welcome.jpg "Welcome Illustration")
+
 The purpose of this project is to tackle the finetuning of a Large Language Model (LLM) on the task of code generation.
 
 # Index
