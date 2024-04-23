@@ -18,8 +18,9 @@ The repository is structured as follows:
 
 ```
 ├── src <- Source code
-│   ├── train.py <- Training the model
-│   └── utils    <- Utility functions
+│   ├── train.py      <- Training the model
+│   ├── run_search.py <- Searching hyperparameters Lightning AI
+│   └── utils         <- Utility functions
 │       ├── args.py        <- Arguments parser
 │       ├── completions.py <- Completions generation
 │       ├── data.py        <- Data pre/post-processing
