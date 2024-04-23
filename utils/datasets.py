@@ -1,6 +1,6 @@
 from datasets import load_dataset
 
-from src.utils.data import (
+from utils.data import (
     is_valid_python,
     insert_instruction_as_docstring,
     break_into_definition_and_solution
@@ -93,6 +93,9 @@ def get_code_alpaca_20k():
 
     # Remove examples that have no code
     dataset = dataset.filter(lambda x: x["code"])
+
+    # Remove the examples that ask for Edit the given code
+    dataset = dataset.filter(lambda x: "Edit" not in x["prompt"])
 
     # Finally return the preprocessed dataset
     return dataset

@@ -3,17 +3,16 @@ Training script for code generation.
 
 Usage:
 ```bash
-python src/train.py \
-    --model_name "Qwen/Qwen1.5-0.5B-Chat" \
-    --epochs 10 \
+python train.py \
+    --model_name 'Qwen/Qwen1.5-0.5B-Chat' \
+    --epochs 1 \
     --learning_rate 2e-5 \
-    --batch_size 2 \
+    --batch_size 1 \
     --desired_batch_size 8 \
-    --test_size 0.1 \
-    --eval_interval 25 \
     --lora_rank 32 \
     --lora_alpha 32 \
-    --lora_dropout 0.1
+    --lora_dropout 0.1 \
+    --exp_id justtest
 ```
 """
 
@@ -22,6 +21,7 @@ python src/train.py \
 ############################################################################################
 import os
 import math
+import time
 import wandb
 import torch
 from tqdm.auto import tqdm
@@ -41,10 +41,10 @@ from peft import get_peft_model
 
 from human_eval.data import write_jsonl, read_problems
 
-from src.utils.args import args
-from src.utils.evaluation import evaluate
-from src.utils.datasets import get_code_alpaca_20k
-from src.utils.completions import clean_completion, inference
+from utils.args import args
+from utils.evaluation import evaluate
+from utils.datasets import get_code_alpaca_20k
+from utils.completions import clean_completion, inference
 
 
 ############################################################################################
@@ -52,7 +52,7 @@ from src.utils.completions import clean_completion, inference
 ############################################################################################
 os.environ["WANDB_SILENT"] = "true"
 wandb_project = 'cody'
-run = wandb.init(project=wandb_project, config=args)
+run = wandb.init(project=wandb_project, name=args.exp_id, config=args)
 print(f'Run name: {run.name}. Visit at {run.get_url()}')
 
 
@@ -194,7 +194,7 @@ lr_scheduler = get_scheduler(
 # Iterating over the dataset in batches
 progress_bar = tqdm(range(max_iters))
 metrics = {"train": {"loss": [], "perplexity": []}, "test": {"loss": [], "perplexity": []}}
-
+train_start = time.time()
 for iter_num in range(max_iters):
     model.train()
     
@@ -240,7 +240,7 @@ for iter_num in range(max_iters):
         })
 
 progress_bar.close()
-
+print(f"Training took: {time.time() - train_start:.2f} seconds")
 
 ############################################################################################
 ################################### Testing the Model ######################################
@@ -277,10 +277,11 @@ print(f"[HumanEval] Loaded {len(problems)} problems")
 num_samples_per_task = 5
 
 results= []
+he_start = time.time()
 for task_id in tqdm(problems):
     for _ in range(num_samples_per_task):
         prompt_text = problems[task_id]['prompt']
-        response = inference(prompt_text, lora_model, tokenizer, max_output_tokens=256)
+        response = inference(prompt_text, lora_model, tokenizer, max_output_tokens=512)
         clean_response = clean_completion(response, tokenizer.eos_token, prompt_text)
 
         results.append({
@@ -288,9 +289,9 @@ for task_id in tqdm(problems):
             'completion': clean_response,
         })
 
+print(f"[HumanEval] Completed in {time.time() - he_start:.2f} seconds")
 # write the results under (f"checkpoints/{run.name}")
 write_jsonl(f"checkpoints/{run.name}/human_eval-{num_samples_per_task}_results.jsonl", results)
-
 
 
 ############################################################################################

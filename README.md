@@ -17,17 +17,16 @@ The purpose of this project is to tackle the finetuning of a Large Language Mode
 The repository is structured as follows:
 
 ```
-├── src <- Source code
-│   ├── train.py      <- Training the model
-│   ├── run_search.py <- Searching hyperparameters Lightning AI
-│   └── utils         <- Utility functions
-│       ├── args.py        <- Arguments parser
-│       ├── completions.py <- Completions generation
-│       ├── data.py        <- Data pre/post-processing
-│       ├── datasets.py    <- Dataset loading
-│       └── evaluation.py  <- Evaluation functions
+├── train.py       <- Training the model
+├── run_search.py  <- Searching hyperparameters Lightning AI
+├── utils          <- Utility functions
+│   ├── args.py         <- Arguments parser
+│   ├── completions.py  <- Completions generation
+│   ├── data.py         <- Data pre/post-processing
+│   ├── datasets.py     <- Dataset loading
+│   └── evaluation.py   <- Evaluation functions
 |
-└── notebooks <- Jupyter notebooks
+└── notebooks  <- Jupyter notebooks
     ├── data_preparation.ipynb  <- Data preparation
     └── training.ipynb          <- Training the model
 ```

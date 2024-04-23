@@ -23,12 +23,23 @@ def clean_completion(text: str, eos_token: str, problem_statement: str) -> str:
 
     # the text should have indentation as is part of a function
     # if in a new line it not indented, remove it till the end
-    res = ""
+    aux = ""
     for line in text.split("\n"):
         # if the line is not empty, and not indented, break
         if line and not line.startswith(" "):
             break
+        aux += line + "\n"
+
+    # remove all after first return line
+    res = ""
+    for line in aux.split("\n"):
         res += line + "\n"
+        if line.strip().startswith("return"):
+            break
+
+    # if exists, clean from the end the \n
+    if res.endswith(" \n"):
+        res = res[:-2]
     
     return res
 

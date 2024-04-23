@@ -28,8 +28,9 @@ parser.add_argument('--lora_rank', type=int, default=32)
 parser.add_argument('--lora_alpha', type=float, default=32, help='Learning rate')
 parser.add_argument('--lora_dropout', type=float, default=0.1, help='Learning rate')
 
+parser.add_argument('--exp_id', type=str, help='Experiment ID')
 
 args = parser.parse_args()
 
-assert args.desired_bach_size > args.batch_size, "Desired batch size should be greater than batch size"
-assert args.batch_size % args.desired_batch_size == 0, "Batch size should be divisible by desired batch size"
+assert args.desired_batch_size > args.batch_size, "Desired batch size should be greater than batch size"
+assert args.desired_batch_size % args.batch_size == 0, "Batch size should be divisible by desired batch size"
