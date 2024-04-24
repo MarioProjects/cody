@@ -194,3 +194,11 @@ wandb
 
 # Any under checkpoints at any level
 **/checkpoints/
+
+# Lightning AI
+.lightning_studio
+
+# Lightning VSCode space
+.vscode-server
+.wget-hsts
+.netrc

@@ -4,7 +4,7 @@ Training script for code generation.
 Usage:
 ```bash
 python train.py \
-    --model_name 'Qwen/Qwen1.5-0.5B-Chat' \
+    --model_name 'microsoft/Phi-3-mini-4k-instruct' \
     --epochs 1 \
     --learning_rate 2e-5 \
     --batch_size 1 \
@@ -71,7 +71,8 @@ bnb_config = BitsAndBytesConfig(
 
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
-    quantization_config=bnb_config
+    quantization_config=bnb_config,
+    trust_remote_code=True
 )
 print(f"Model loaded: {model_name}")
 

@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(description='Cody - Finetuning for Code Generat
 
 # google/gemma-2b | google/gemma-2b-it | microsoft/phi-2
 # Qwen/Qwen1.5-0.5B | Qwen/Qwen1.5-0.5B-Chat
+# microsoft/Phi-3-mini-4k-instruct
 parser.add_argument('--model_name', type=str, default='Qwen/Qwen1.5-0.5B-Chat', help='Model name to use')
 
 parser.add_argument('--epochs', type=int, default=10, help='Total number epochs for finetuning')
@@ -22,7 +23,7 @@ parser.add_argument('--batch_size', type=int, default=64, help='Batch Size for t
 parser.add_argument('--desired_batch_size', type=int, default=8, help='Final batch size after gradient accumulation')
 
 parser.add_argument('--test_size', type=float, default=0.1, help='Data fraction for test')
-parser.add_argument('--eval_interval', type=int, default=25, help='Interval for evaluation')
+parser.add_argument('--eval_interval', type=int, default=50, help='Interval for evaluation')
 
 parser.add_argument('--lora_rank', type=int, default=32)
 parser.add_argument('--lora_alpha', type=float, default=32, help='Learning rate')
