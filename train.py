@@ -39,8 +39,6 @@ from transformers import get_scheduler
 from peft import LoraConfig, TaskType
 from peft import get_peft_model
 
-from human_eval.data import write_jsonl, read_problems
-
 from utils.args import args
 from utils.evaluation import evaluate
 from utils.datasets import get_code_alpaca_20k
@@ -237,7 +235,6 @@ for iter_num in range(max_iters):
 progress_bar.close()
 print(f"Training took: {time.time() - train_start:.2f} seconds")
 
-lora_model.save_pretrained(f"checkpoints/{run.name}")
 
 ############################################################################################
 ################################### Testing the Model ######################################
@@ -263,40 +260,12 @@ run.log({"test_completions": test_table})
 
 
 ############################################################################################
-###################################### Human Eval ##########################################
-############################################################################################
-"""
-problems = read_problems()
-print(f"[HumanEval] Loaded {len(problems)} problems")
-
-# we can generate more than one candidate per task
-# later one pass@1, pass@10... will be used to evaluate the model
-num_samples_per_task = 5
-
-results= []
-he_start = time.time()
-for task_id in tqdm(problems):
-    for _ in range(num_samples_per_task):
-        prompt_text = problems[task_id]['prompt']
-        response = inference(prompt_text, lora_model, tokenizer, max_output_tokens=512)
-        clean_response = clean_completion(response, tokenizer.eos_token, prompt_text)
-
-        results.append({
-            'task_id': task_id,
-            'completion': clean_response,
-        })
-
-print(f"[HumanEval] Completed in {time.time() - he_start:.2f} seconds")
-# write the results under (f"checkpoints/{run.name}")
-write_jsonl(f"checkpoints/{run.name}/human_eval-{num_samples_per_task}_results.jsonl", results)
-"""
-
-############################################################################################
 #################################### Save the Model ########################################
 ############################################################################################
 
-#artifact = wandb.Artifact(f"human_eval-{num_samples_per_task}_results", type="human_eval")
-artifact = wandb.Artifact(f"model_checkpoint", type="model_checkpoint")
+lora_model.save_pretrained(f"checkpoints/{run.name}")
+
+artifact = wandb.Artifact(f"model_{args.exp_id}", type="model_checkpoint")
 artifact.add_dir(f"checkpoints/{run.name}")
 run.log_artifact(artifact)
 
