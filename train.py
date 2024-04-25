@@ -194,7 +194,6 @@ lr_scheduler = get_scheduler(
 ## Training loop
 # Iterating over the dataset in batches
 progress_bar = tqdm(range(max_iters))
-metrics = {"train": {"loss": [], "perplexity": []}, "test": {"loss": [], "perplexity": []}}
 train_start = time.time()
 for iter_num in range(max_iters):
     model.train()
@@ -222,11 +221,6 @@ for iter_num in range(max_iters):
         train_loss = loss.item() * gradient_accumulation_steps
 
         test_loss, test_perplexity = evaluate(model, test_dataloader)
-        #train_loss, train_perplexity = evaluate(model, train_dataloader)
-        #metrics["train"]["loss"].append(train_loss)
-        #metrics["train"]["perplexity"].append(train_perplexity)
-        metrics["test"]["loss"].append(test_loss)
-        metrics["test"]["perplexity"].append(test_perplexity)
 
         print(f"### ITER {iter_num} ###")
         #print(f"Train Loss: {train_loss:.4f} - Train Perplexity: {train_perplexity:.4f}")
@@ -242,6 +236,8 @@ for iter_num in range(max_iters):
 
 progress_bar.close()
 print(f"Training took: {time.time() - train_start:.2f} seconds")
+
+lora_model.save_pretrained(f"checkpoints/{run.name}")
 
 ############################################################################################
 ################################### Testing the Model ######################################
@@ -269,7 +265,7 @@ run.log({"test_completions": test_table})
 ############################################################################################
 ###################################### Human Eval ##########################################
 ############################################################################################
-
+"""
 problems = read_problems()
 print(f"[HumanEval] Loaded {len(problems)} problems")
 
@@ -293,13 +289,14 @@ for task_id in tqdm(problems):
 print(f"[HumanEval] Completed in {time.time() - he_start:.2f} seconds")
 # write the results under (f"checkpoints/{run.name}")
 write_jsonl(f"checkpoints/{run.name}/human_eval-{num_samples_per_task}_results.jsonl", results)
-
+"""
 
 ############################################################################################
 #################################### Save the Model ########################################
 ############################################################################################
 
-artifact = wandb.Artifact(f"human_eval-{num_samples_per_task}_results", type="human_eval")
+#artifact = wandb.Artifact(f"human_eval-{num_samples_per_task}_results", type="human_eval")
+artifact = wandb.Artifact(f"model_checkpoint", type="model_checkpoint")
 artifact.add_dir(f"checkpoints/{run.name}")
 run.log_artifact(artifact)
 
