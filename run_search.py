@@ -12,9 +12,9 @@ job_plugin = studio.installed_plugins['jobs']
 
 # do a sweep over learning rates
 models = [
+    {"model": 'microsoft/Phi-3-mini-4k-instruct', "batch_size": 2},
     {"model": 'Qwen/Qwen1.5-0.5B-Chat', "batch_size": 4},
-    {"model": 'google/gemma-2b-it', "batch_size": 2},
-    {"model": 'microsoft/Phi-3-mini-4k-instruct', "batch_size": 2}
+    # {"model": 'google/gemma-2b-it', "batch_size": 2},
 ]
 
 epochs = [5, 10, 15]
@@ -51,4 +51,4 @@ for combination in combinations:
     """
 
     job_name = f'run-{experiment_id}'
-    job_plugin.run(cmd, machine=Machine.T4, name=job_name)
+    job_plugin.run(cmd, machine=Machine.L4, name=job_name)

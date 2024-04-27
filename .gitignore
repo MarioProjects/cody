@@ -188,6 +188,7 @@ cython_debug/
 
 # logging
 wandb
+artifacts
 
 # Generation files
 *.jsonl
