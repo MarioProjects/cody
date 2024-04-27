@@ -1,6 +1,10 @@
 import uuid
+import random
 import itertools
 from lightning_sdk import Studio, Machine
+
+# number of desired combinations
+DESIRED_COMBINATIONS = 30
 
 # reference to the current studio
 # if you run outside of Lightning, you can pass the Studio name
@@ -32,6 +36,10 @@ combinations = list(itertools.product(
 ))
 
 print(f"Total combinations: {len(combinations)}")
+print(f"Desired combinations: {DESIRED_COMBINATIONS}")
+
+# take DESIRED_COMBINATIONS random combinations
+combinations = random.sample(combinations, DESIRED_COMBINATIONS)
 
 # start all jobs on an A10G GPU with names containing an index
 for combination in combinations:
