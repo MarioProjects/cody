@@ -4,7 +4,7 @@ Training script for code generation.
 Usage:
 ```bash
 python train.py \
-    --model_name 'microsoft/Phi-3-mini-4k-instruct' \
+    --model_name 'Qwen/Qwen1.5-0.5B-Chat' \
     --epochs 1 \
     --learning_rate 2e-5 \
     --batch_size 1 \
@@ -245,7 +245,7 @@ assert test_samples <= len(dataset['test']), "Not enough samples for testing"
 
 test_table = wandb.Table(columns=["Prompt", "Completion", "Model Completion"])
 
-for case in range(test_samples):
+for case in tqdm(range(test_samples)):
     full_text = split_dataset['test'][case]['code']
     prompt_text = split_dataset['test'][case]['prompt']
     completion_text = split_dataset['test'][case]['completion']
@@ -260,10 +260,11 @@ run.log({"test_completions": test_table})
 
 
 ############################################################################################
-#################################### Save the Model ########################################
+################################# Save the Model & Tokenizer ###############################
 ############################################################################################
 
 lora_model.save_pretrained(f"checkpoints/{run.name}")
+tokenizer.save_pretrained(f"checkpoints/{run.name}")
 
 artifact = wandb.Artifact(f"model_{args.exp_id}", type="model_checkpoint")
 artifact.add_dir(f"checkpoints/{run.name}")

@@ -49,7 +49,7 @@ def inference(text, model, tokenizer, max_input_tokens=1000, max_output_tokens=2
     Generate text from a prompt using a model and tokenizer.
 
     Args:
-        text (str): The prompt to generate text from.
+        text (str) or (List<str>): The prompt to generate text from.
         model (transformers.PreTrainedModel): The model to generate text with.
         tokenizer (transformers.PreTrainedTokenizer): The tokenizer to use.
         max_input_tokens (int): The maximum number of tokens to use as input.
@@ -59,7 +59,8 @@ def inference(text, model, tokenizer, max_input_tokens=1000, max_output_tokens=2
         str: The generated text.
     '''
     # Tokenize
-    input_ids = tokenizer.encode(
+    # Tokenize
+    input_ids = tokenizer(
         text,
         return_tensors="pt",
         truncation=True,
@@ -68,10 +69,10 @@ def inference(text, model, tokenizer, max_input_tokens=1000, max_output_tokens=2
 
     # Generate
     generated_tokens_with_prompt = model.generate(
-        input_ids=input_ids,
+        **input_ids,
         max_length=max_output_tokens,
         pad_token_id=tokenizer.pad_token_id,
-        temperature=temperature,
+        temperature=temperature
     )
 
     # Decode
@@ -80,6 +81,10 @@ def inference(text, model, tokenizer, max_input_tokens=1000, max_output_tokens=2
     )
 
     # Strip the prompt
-    generated_text_answer = generated_text_with_prompt[0][len(text):]
+    # generated_text_answer = generated_text_with_prompt[0][len(text):]
 
-    return generated_text_answer
+    # if the input was a string, return a string
+    if isinstance(text, str):
+        return generated_text_with_prompt[0]
+
+    return generated_text_with_prompt
