@@ -11,6 +11,8 @@ The purpose of this project is to tackle the finetuning of a Large Language Mode
 3. [Models](#models)
 4. [Datasets](#datasets)
 5. [Evaluation: HumanEval](#evaluation-humaneval)
+6. [Error Analysis](#error-analysis)
+7. [Future Work](#future-work)
 
 # Project Overview
 
@@ -124,3 +126,23 @@ def check(candidate):
 ```
 
 
+# Error Analysis
+
+In order to analyse the possible reasons why, when training the model, the monitoring metrics show an improvement during training, but then we fail to improve during testing, we need to go back to the data and study it.
+
+By performing an exploratory analysis of the data, obtaining statistics from the training data, Code Alpaca, and the final test data, Human Eval, we observe differences that can give us clues.
+
+Given any data, we can divide it into two parts: the prompt (the instructions given to the LLM) and the completion (the part that the LLM has to generate in response to the prompt, the answer).
+
+![Token distribution](assets/token_distribution.jpg "Token distribution")
+
+We can clearly see that the prompt part is almost 5 times shorter in Code Alpaca than in Human Eval. This part refers to the input to the LLM, the instructions that explain to the model what the code to be generated looks like. We could think that they are longer because a more complex and longer code is required, but if we look at the length of the texts to be generated, the generations of Code Alpaca and Human Eval are quite similar in length. This leads us to believe that the problem is really that the instructions in Code Alpaca are not as detailed and explicit as in the test set, and that the two sets of data are not quite matched.
+
+Next, we will look at some suggestions for dealing with this problem.
+
+
+# Future Work
+
+In terms of future work to improve Cody's performance on the HumanEval benchmark, the main improvement strategy would be to use more and higher quality data. In this sense, it would be ideal if both input and output token distributions were similar and showed qualitatively similar tasks.
+
+On the other hand, it would be beneficial to use more models with different abilities to study how their prior ability affects their improvement during fine-tuning.
