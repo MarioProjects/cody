@@ -152,5 +152,3 @@ On the other hand, it would be beneficial to use more models with different abil
 # Recent Findings
 
 [LoRA Land paper](https://arxiv.org/abs/2405.00732) shows that the performance of open source models on HumanEval is not as good as expected, even with fine-tuning. They train multiple models on [magicoder](https://huggingface.co/datasets/ise-uiuc/Magicoder-OSS-Instruct-75K) dataset which contains ~75k examples with a 50.9% examples written in python. Check out the [paper code preparation](https://github.com/predibase/lora_bakeoff/blob/main/tasks/magicoder/metadata.yaml) for the prompting strategy used. Of the 31 tasks evaluated, code generation was the worst performing task when comparing with OpenAI models.
-
-```
