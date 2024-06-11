@@ -2,7 +2,7 @@
 
 ![Welcome Illustration](assets/welcome.jpg "Welcome Illustration")
 
-The purpose of this project is to tackle the finetuning of a Large Language Model (LLM) on the task of code generation.
+The purpose of this project is to tackle the finetuning of a Large Language Model (LLM) on the task of code generation. A report is published at [Weights & Biases](https://wandb.ai/marioparreno/cody/reports/Cody--Vmlldzo4MTc0ODg4).
 
 # Index
 
@@ -13,6 +13,7 @@ The purpose of this project is to tackle the finetuning of a Large Language Mode
 5. [Evaluation: HumanEval](#evaluation-humaneval)
 6. [Error Analysis](#error-analysis)
 7. [Future Work](#future-work)
+8. [Recent Findings](#recent-findings)
 
 # Project Overview
 
@@ -49,7 +50,7 @@ We will use the `transformers` library to finetune a model on the task of code g
 
 You can also find a leaderboard of the performance of different models on the HumanEval dataset [here](https://huggingface.co/spaces/bigcode/bigcode-models-leaderboard), and [here](https://qwenlm.github.io/blog/qwen1.5/) for `Qwen1.5` model. My results may differ from the ones reported in the leaderboard due to the different prompt engineering, checkout how Qwen is generating completions for the [normal](https://github.com/QwenLM/Qwen/blob/main/eval/evaluate_humaneval.py) and [chat](https://github.com/QwenLM/Qwen/blob/main/eval/evaluate_chat_humaneval.py) models.
 
-Note: You can notice that the reported performance 
+Note: You can notice that the reported performance is lower than the one reported by each model. This is because authors implement custom prompts and post-processing steps to improve the performance of the model on the HumanEval dataset. The performance reported here is the one obtained without too much prompt engineering.
 
 # Datasets
 
@@ -143,6 +144,13 @@ Next, we will look at some suggestions for dealing with this problem.
 
 # Future Work
 
-In terms of future work to improve Cody's performance on the HumanEval benchmark, the main improvement strategy would be to use more and higher quality data. In this sense, it would be ideal if both input and output token distributions were similar and showed qualitatively similar tasks.
+In terms of future work to improve Cody's performance on the HumanEval benchmark, the main improvement strategy would be to use more and higher quality data. In this sense, it would be ideal if both input and output token distributions were similar and showed qualitatively similar tasks. More datasets can be found [here](https://github.com/mlabonne/llm-datasets?tab=readme-ov-file#code).
 
 On the other hand, it would be beneficial to use more models with different abilities to study how their prior ability affects their improvement during fine-tuning.
+
+
+# Recent Findings
+
+[LoRA Land paper](https://arxiv.org/abs/2405.00732) shows that the performance of open source models on HumanEval is not as good as expected, even with fine-tuning. They train multiple models on [magicoder](https://huggingface.co/datasets/ise-uiuc/Magicoder-OSS-Instruct-75K) dataset which contains ~75k examples with a 50.9% examples written in python. Check out the [paper code preparation](https://github.com/predibase/lora_bakeoff/blob/main/tasks/magicoder/metadata.yaml) for the prompting strategy used. Of the 31 tasks evaluated, code generation was the worst performing task when comparing with OpenAI models.
+
+```
