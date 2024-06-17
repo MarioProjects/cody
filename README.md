@@ -30,6 +30,7 @@ The repository is structured as follows:
 │   └── evaluation.py   <- Evaluation functions
 |
 └── notebooks  <- Jupyter notebooks
+    ├── eda.ipynb               <- Exploratory Data Analysis
     ├── data_preparation.ipynb  <- Data preparation
     └── training.ipynb          <- Training the model
 ```
